@@ -83,7 +83,6 @@ export default class UserListPage extends Vue {
   users: UserListData[] = []
 
   loading = false
-  nextUrl: string | null = null
 
   /** AreaCode - String mapping for <select> components */
   readonly areaOptions = Object.entries(areaList).map(v => ({
