@@ -7,7 +7,7 @@ import ErrorPage from '~/layouts/error.vue'
 const localVue = createLocalVue()
 localVue.use(Buefy)
 
-describe('layouts/default.vue', () => {
+describe('layouts/error.vue', () => {
   test('renders Not Found error page', () => {
     const error: NuxtError = {
       message: 'This page could not be found',
