@@ -66,6 +66,68 @@ describe('./store/index.ts', () => {
     })
   })
   describe('actions', () => {
+    describe('fetchUser', () => {
+      test('calls GET /.auth/me API only if not loggedIn', async () => {
+        // Arrange
+        const commit = jest.fn()
+        const $get = jest.fn()
+        $get.mockResolvedValue({ clientPrincipal: null })
+        // @ts-ignore
+        actions.$http = { $get }
+
+        // Act
+        // @ts-ignore
+        await actions.fetchUser({ commit })
+
+        // Assert
+        expect($get).toBeCalledWith('/.auth/me')
+        expect(commit).toBeCalledWith('setAuth', null)
+      })
+      test('calls GET /.auth/me API and /api/v1/user API if loggedIn', async () => {
+        // Arrange
+        const commit = jest.fn()
+        const $get = jest.fn()
+        $get.mockImplementation(url =>
+          Promise.resolve(
+            url === '/.auth/me' ? { clientPrincipal: auth } : user
+          )
+        )
+        // @ts-ignore
+        actions.$http = { $get }
+
+        // Act
+        // @ts-ignore
+        await actions.fetchUser({ commit })
+
+        // Assert
+        expect($get).toBeCalledWith('/.auth/me')
+        expect($get).toBeCalledWith('/api/v1/user')
+        expect(commit).toBeCalledWith('setAuth', auth)
+        expect(commit).toBeCalledWith('setUser', user)
+      })
+      test('sets user null if not registered user', async () => {
+        // Arrange
+        const commit = jest.fn()
+        const $get = jest.fn()
+        $get.mockImplementation(url =>
+          url === '/.auth/me'
+            ? Promise.resolve({ clientPrincipal: auth })
+            : Promise.reject(new Error('400'))
+        )
+        // @ts-ignore
+        actions.$http = { $get }
+
+        // Act
+        // @ts-ignore
+        await actions.fetchUser({ commit })
+
+        // Assert
+        expect($get).toBeCalledWith('/.auth/me')
+        expect($get).toBeCalledWith('/api/v1/user')
+        expect(commit).toBeCalledWith('setAuth', auth)
+        expect(commit).toBeCalledWith('setUser', null)
+      })
+    })
     describe('logout', () => {
       test('calls setAuth(null) and setUser(null)', () => {
         const commit = jest.fn()
@@ -75,6 +137,25 @@ describe('./store/index.ts', () => {
 
         expect(commit).toBeCalledWith('setAuth', null)
         expect(commit).toBeCalledWith('setUser', null)
+      })
+    })
+    describe('saveUser', () => {
+      test('calls POST /api/v1/user API', async () => {
+        // Arrange
+        const commit = jest.fn()
+        const $post = jest.fn()
+        const newUser = { ...user, name: 'New user' }
+        $post.mockResolvedValue(newUser)
+        // @ts-ignore
+        actions.$http = { $post }
+
+        // Act
+        // @ts-ignore
+        await actions.saveUser({ commit }, user)
+
+        // Assert
+        expect($post).toBeCalledWith('/api/v1/user', user)
+        expect(commit).toBeCalledWith('setUser', newUser)
       })
     })
   })
