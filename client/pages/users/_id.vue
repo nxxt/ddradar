@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <template v-if="!user && !loading">
+    <template v-if="!user && !$fetchState.pending">
       ユーザーは存在しないか、非公開に設定されています。
     </template>
     <template v-else>
@@ -40,8 +40,7 @@ import { areaList, UserListData } from '~/types/api/user'
 
 @Component({ fetchOnServer: false })
 export default class UserDetailPage extends Vue {
-  user: UserListData | null
-  loading = true
+  user: UserListData | null = null
 
   get areaName() {
     return this.user ? areaList[this.user.area] : ''
@@ -55,7 +54,7 @@ export default class UserDetailPage extends Vue {
 
   get isSelfPage() {
     const loginId = this.$accessor.user?.id
-    return this.user && this.user.id === loginId
+    return !!this.user && this.user.id === loginId
   }
 
   /** id expected [a-z], [0-9], [-], [_] */
@@ -72,7 +71,6 @@ export default class UserDetailPage extends Vue {
     } catch {
       this.user = null
     }
-    this.loading = false
   }
 }
 </script>

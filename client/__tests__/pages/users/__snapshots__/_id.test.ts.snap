@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pages/users/_id.vue snapshot test renders loading 1`] = `
+<section class="section">
+  <div class="b-skeleton is-animated">
+    <div class="b-skeleton-item is-rounded"></div>
+  </div>
+  <div class="b-skeleton is-animated">
+    <div class="b-skeleton-item is-rounded"></div>
+  </div>
+  <!---->
+</section>
+`;
+
+exports[`pages/users/_id.vue snapshot test renders my page 1`] = `
+<section class="section">
+  <h1 class="title">User 1</h1>
+  <h2 class="subtitle">北海道 / 1000-0000</h2>
+  <div class="buttons"><a type="button" class="button is-primary"><span class="icon is-small"><i class="mdi mdi-import"></i></span> <span>
+        スコアのインポート
+      </span>
+      <!----></a> <a type="button" class="button is-info"><span class="icon is-small"><i class="mdi mdi-account-cog"></i></span> <span>
+        設定
+      </span>
+      <!----></a></div>
+</section>
+`;
+
+exports[`pages/users/_id.vue snapshot test renders not found 1`] = `
+<section class="section">
+  ユーザーは存在しないか、非公開に設定されています。
+</section>
+`;
+
+exports[`pages/users/_id.vue snapshot test renders user info 1`] = `
+<section class="section">
+  <h1 class="title">User 1</h1>
+  <h2 class="subtitle">北海道 / 1000-0000</h2>
+  <!---->
+</section>
+`;
