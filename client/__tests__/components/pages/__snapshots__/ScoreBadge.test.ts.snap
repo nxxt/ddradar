@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/components/pages/ScoreBadge.vue renders correctly if props are { lamp: 0, score: 32340 } 1`] = `
+<span data-label="Failed" class="is-primary is-top is-medium b-tooltip" style="transition-delay: 0ms;"><span class="tag is-light is-light">
+    32340
+  </span></span>
+`;
+
+exports[`/components/pages/ScoreBadge.vue renders correctly if props are { lamp: 1, score: 450000 } 1`] = `
+<span data-label="Assisted Clear" class="is-primary is-top is-medium b-tooltip" style="transition-delay: 0ms;"><span class="tag is-light is-challenge">
+    450000
+  </span></span>
+`;
+
+exports[`/components/pages/ScoreBadge.vue renders correctly if props are { lamp: 2, score: 690000 } 1`] = `
+<span data-label="Clear" class="is-primary is-top is-medium b-tooltip" style="transition-delay: 0ms;"><span class="tag is-light">
+    690000
+  </span></span>
+`;
+
+exports[`/components/pages/ScoreBadge.vue renders correctly if props are { lamp: 3, score: 923400 } 1`] = `
+<span data-label="Life 4" class="is-primary is-top is-medium b-tooltip" style="transition-delay: 0ms;"><span class="tag is-light is-difficult">
+    923400
+  </span></span>
+`;
+
+exports[`/components/pages/ScoreBadge.vue renders correctly if props are { lamp: 4, score: 877800 } 1`] = `
+<span data-label="Full Combo" class="is-primary is-top is-medium b-tooltip" style="transition-delay: 0ms;"><span class="tag is-light is-beginner">
+    877800
+  </span></span>
+`;
+
+exports[`/components/pages/ScoreBadge.vue renders correctly if props are { lamp: 5, score: 938400 } 1`] = `
+<span data-label="Great Full Combo" class="is-primary is-top is-medium b-tooltip" style="transition-delay: 0ms;"><span class="tag is-light is-expert">
+    938400
+  </span></span>
+`;
+
+exports[`/components/pages/ScoreBadge.vue renders correctly if props are { lamp: 6, score: 999800 } 1`] = `
+<span data-label="Perfect Full Combo" class="is-primary is-top is-medium b-tooltip" style="transition-delay: 0ms;"><span class="tag is-light is-basic">
+    999800
+  </span></span>
+`;
+
+exports[`/components/pages/ScoreBadge.vue renders correctly if props are { lamp: 7, score: 1000000 } 1`] = `
+<span data-label="Marvelous Full Combo" class="is-primary is-top is-medium b-tooltip" style="transition-delay: 0ms;"><span class="tag is-light is-white">
+    1000000
+  </span></span>
+`;
