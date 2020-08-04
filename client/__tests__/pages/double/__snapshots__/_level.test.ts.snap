@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`/double/_level.vue renders loaded 1`] = `
+exports[`pages/double/_level.vue renders loaded 1`] = `
 <section class="section">
   <h1 class="title">DOUBLE 19</h1>
   <div class="b-table">
@@ -160,7 +160,7 @@ exports[`/double/_level.vue renders loaded 1`] = `
 </section>
 `;
 
-exports[`/double/_level.vue renders loading 1`] = `
+exports[`pages/double/_level.vue renders loading 1`] = `
 <section class="section">
   <h1 class="title">DOUBLE 19</h1>
   <div class="b-table is-loading">

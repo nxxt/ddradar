@@ -14,7 +14,7 @@ const localVue = createLocalVue()
 localVue.use(Buefy)
 const $fetchState = { pending: false }
 
-describe('/double/_level.vue', () => {
+describe('pages/double/_level.vue', () => {
   describe('renders', () => {
     const $route = { params: { level: '19' } }
     test('loading', () => {
@@ -127,8 +127,8 @@ describe('/double/_level.vue', () => {
     })
   })
   describe('fetch()', () => {
-    test.skip.each(['1', '9', '19', '20'])(
-      'calls /songs/name/%s API',
+    test.each(['1', '9', '19', '20'])(
+      'calls /api/v1/charts/2/%s API',
       async level => {
         // Arrange
         const $http = { $get: jest.fn<ChartInfo[], string[]>(() => []) }
@@ -143,12 +143,11 @@ describe('/double/_level.vue', () => {
         })
 
         // Act
-        // @ts-ignore
-        await wrapper.vm.$options.fetch()
+        await wrapper.vm.$options.fetch.call(wrapper.vm)
 
         // Assert
         expect($http.$get.mock.calls.length).toBe(1)
-        expect($http.$get.mock.calls[0][0]).toBe(`/songs/name/${level}`)
+        expect($http.$get.mock.calls[0][0]).toBe(`/api/v1/charts/2/${level}`)
       }
     )
   })

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`/single/_level.vue renders loaded 1`] = `
+exports[`pages/single/_level.vue renders loaded 1`] = `
 <section class="section">
   <h1 class="title">SINGLE 19</h1>
   <div class="b-table">
@@ -181,7 +181,7 @@ exports[`/single/_level.vue renders loaded 1`] = `
 </section>
 `;
 
-exports[`/single/_level.vue renders loading 1`] = `
+exports[`pages/single/_level.vue renders loading 1`] = `
 <section class="section">
   <h1 class="title">SINGLE 19</h1>
   <div class="b-table is-loading">

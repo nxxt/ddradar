@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`/series/_seriesIndex.vue renders loaded 1`] = `
+exports[`pages/series/_seriesIndex.vue renders loaded 1`] = `
 <section
   class="section"
 >
@@ -239,7 +239,7 @@ exports[`/series/_seriesIndex.vue renders loaded 1`] = `
 </section>
 `;
 
-exports[`/series/_seriesIndex.vue renders loading 1`] = `
+exports[`pages/series/_seriesIndex.vue renders loading 1`] = `
 <section
   class="section"
 >

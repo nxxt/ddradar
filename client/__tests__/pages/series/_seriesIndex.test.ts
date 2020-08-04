@@ -47,7 +47,7 @@ const songs: SongListData[] = [
 ]
 const $fetchState = { pending: false }
 
-describe('/series/_seriesIndex.vue', () => {
+describe('pages/series/_seriesIndex.vue', () => {
   describe('renders', () => {
     const $route = { params: { seriesIndex: '36' } }
     test('loading', () => {
@@ -121,8 +121,8 @@ describe('/series/_seriesIndex.vue', () => {
     )
   })
   describe('fetch()', () => {
-    test.skip.each(['0', '1', '9', '10', '16'])(
-      'calls /songs/series/%s API',
+    test.each(['0', '1', '9', '10', '16'])(
+      'calls /api/v1/songs/series/%s API',
       async seriesIndex => {
         // Arrange
         const $http = { $get: jest.fn<SongListData[], string[]>(() => []) }
@@ -137,12 +137,13 @@ describe('/series/_seriesIndex.vue', () => {
         })
 
         // Act
-        // @ts-ignore
-        await wrapper.vm.$options.fetch()
+        await wrapper.vm.$options.fetch.call(wrapper.vm)
 
         // Assert
         expect($http.$get.mock.calls.length).toBe(1)
-        expect($http.$get.mock.calls[0][0]).toBe(`/songs/series/${seriesIndex}`)
+        expect($http.$get.mock.calls[0][0]).toBe(
+          `/api/v1/songs/series/${seriesIndex}`
+        )
       }
     )
   })
