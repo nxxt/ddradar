@@ -1,8 +1,9 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { Context } from '@nuxt/types'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Buefy from 'buefy'
 
 import SongPage from '~/pages/songs/_id/_chart.vue'
-import type { SongInfo } from '~/types/api/song'
+import type { SongInfo, StepChart } from '~/types/api/song'
 
 const localVue = createLocalVue()
 localVue.use(Buefy)
@@ -111,18 +112,205 @@ const song: SongInfo = {
   ],
 }
 
-describe('songs/:id/:chart', () => {
+describe('pages/songs/:id/:chart', () => {
   test('rendars correctly', () => {
     const wrapper = mount(SongPage, {
       localVue,
-      data: () => {
-        return {
-          song,
-          playStyle: 1,
-          difficulty: 0,
-        }
-      },
+      data: () => ({ song, playStyle: 1, difficulty: 0 }),
     })
-    expect(wrapper.element).toMatchSnapshot()
+    expect(wrapper).toMatchSnapshot()
+  })
+  describe('get singleCharts()', () => {
+    test('returns [] if song is null', () => {
+      // Arrange
+      const wrapper = shallowMount(SongPage, { localVue })
+
+      // Act
+      // @ts-ignore
+      const charts: StepChart[] = wrapper.vm.singleCharts
+
+      // Assert
+      expect(charts).toHaveLength(0)
+    })
+    test('returns StepCharts that playStyle: 1', () => {
+      // Arrange
+      const wrapper = shallowMount(SongPage, {
+        localVue,
+        data: () => ({ song }),
+      })
+
+      // Act
+      // @ts-ignore
+      const charts: StepChart[] = wrapper.vm.singleCharts
+
+      // Assert
+      expect(charts).toHaveLength(4)
+    })
+  })
+  describe('get doubleCharts()', () => {
+    test('returns [] if song is null', () => {
+      // Arrange
+      const wrapper = shallowMount(SongPage, { localVue })
+
+      // Act
+      // @ts-ignore
+      const charts: StepChart[] = wrapper.vm.doubleCharts
+
+      // Assert
+      expect(charts).toHaveLength(0)
+    })
+    test('returns StepCharts that playStyle: 2', () => {
+      // Arrange
+      const wrapper = shallowMount(SongPage, {
+        localVue,
+        data: () => ({ song }),
+      })
+
+      // Act
+      // @ts-ignore
+      const charts: StepChart[] = wrapper.vm.doubleCharts
+
+      // Assert
+      expect(charts).toHaveLength(3)
+    })
+  })
+  describe('get displayedBPM()', () => {
+    test('returns ??? if song is null', () => {
+      // Arrange
+      const wrapper = shallowMount(SongPage, { localVue })
+
+      // Act - Assert
+      // @ts-ignore
+      expect(wrapper.vm.displayedBPM).toBe('???')
+    })
+    test('returns ??? if song BPM is undefined', () => {
+      // Arrange
+      const wrapper = shallowMount(SongPage, {
+        localVue,
+        data: () => ({
+          song: { ...song, minBPM: undefined, maxBPM: undefined },
+        }),
+      })
+
+      // Act - Assert
+      // @ts-ignore
+      expect(wrapper.vm.displayedBPM).toBe('???')
+    })
+    test('returns 000 if song minBPM = maxBPM', () => {
+      // Arrange
+      const wrapper = shallowMount(SongPage, {
+        localVue,
+        data: () => ({ song }),
+      })
+
+      // Act - Assert
+      // @ts-ignore
+      expect(wrapper.vm.displayedBPM).toBe(`${song.minBPM}`)
+    })
+    test('returns 000-000 if song minBPM != maxBPM', () => {
+      // Arrange
+      const wrapper = shallowMount(SongPage, {
+        localVue,
+        data: () => ({ song: { ...song, minBPM: 100, maxBPM: 400 } }),
+      })
+
+      // Act - Assert
+      // @ts-ignore
+      expect(wrapper.vm.displayedBPM).toBe('100-400')
+    })
+  })
+  describe('validate()', () => {
+    test.each(['', 'foo', '000000000000000000000000000000000'])(
+      '/songs/%s returns false',
+      id => {
+        // Arrange
+        const wrapper = shallowMount(SongPage, { localVue })
+        const ctx = ({ params: { id } } as unknown) as Context
+
+        // Act - Assert
+        expect(wrapper.vm.$options.validate(ctx)).toBe(false)
+      }
+    )
+    test.each(['00000000000000000000000000000000', song.id])(
+      '/songs/%s returns true',
+      id => {
+        // Arrange
+        const wrapper = shallowMount(SongPage, { localVue })
+        const ctx = ({ params: { id } } as unknown) as Context
+
+        // Act - Assert
+        expect(wrapper.vm.$options.validate(ctx)).toBe(true)
+      }
+    )
+    test.each(['foo', '0', '30', '25', '111'])(
+      `/songs/${song.id}/%s returns false`,
+      chart => {
+        // Arrange
+        const wrapper = shallowMount(SongPage, { localVue })
+        const ctx = ({ params: { id: song.id, chart } } as unknown) as Context
+
+        // Act - Assert
+        expect(wrapper.vm.$options.validate(ctx)).toBe(false)
+      }
+    )
+    test.each(['', '10', '21', '14'])(
+      `/songs/${song.id}/%s returns true`,
+      chart => {
+        // Arrange
+        const wrapper = shallowMount(SongPage, { localVue })
+        const ctx = ({ params: { id: song.id, chart } } as unknown) as Context
+
+        // Act - Assert
+        expect(wrapper.vm.$options.validate(ctx)).toBe(true)
+      }
+    )
+  })
+  describe('asyncData()', () => {
+    const $http = { $get: jest.fn(_ => Promise.resolve(song)) }
+    beforeEach(() => {
+      $http.$get.mockClear()
+    })
+    test(`/songs/${song.id} returns { song }`, async () => {
+      // Arrange
+      const wrapper = shallowMount(SongPage, { localVue })
+      const ctx = ({ params: { id: song.id }, $http } as unknown) as Context
+
+      // Act
+      const result = await wrapper.vm.$options.asyncData(ctx)
+
+      // @ts-ignore
+      expect(result.song).toStrictEqual(song)
+      expect(result).not.toHaveProperty('playStyle')
+      expect(result).not.toHaveProperty('difficulty')
+    })
+    test.each([
+      ['10', 1, 0],
+      ['11', 1, 1],
+      ['12', 1, 2],
+      ['13', 1, 3],
+      ['14', 1, 4],
+      ['21', 2, 1],
+      ['22', 2, 2],
+      ['23', 2, 3],
+      ['24', 2, 4],
+    ])(
+      `/songs/${song.id}/%s returns { song, playStyle: %i, difficulty: %i }`,
+      async (chart, playStyle, difficulty) => {
+        // Arrange
+        const wrapper = shallowMount(SongPage, { localVue })
+        const ctx = ({
+          params: { id: song.id, chart },
+          $http,
+        } as unknown) as Context
+
+        // Act
+        const result: any = await wrapper.vm.$options.asyncData(ctx)
+
+        // @ts-ignore
+        expect(result.song).toStrictEqual(song)
+        expect(result.playStyle).toBe(playStyle)
+        expect(result.difficulty).toBe(difficulty)
+      }
+    )
   })
 })
